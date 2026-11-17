@@ -1,0 +1,40 @@
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# AWS CDK build artifacts
+cdk.out/
+**/cdk.out/
+.cdk.staging/
+
+# Local Docker volumes (LocalStack / MiniStack / Redis)
+emulador-data/
+localstack-data/
+ministack-data/
+redis_data/
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Node.js / Next.js build artifacts
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+out/
+dist/
+
+# OS & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

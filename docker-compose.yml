@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  # Opción A: image: localstack/localstack:4.14
+  # Opción B: image: ministack/ministack
+  emulador:
+    image: localstack/localstack:4.14
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      SERVICES: "apigateway,lambda,dynamodb"
+      LAMBDA_EXECUTOR: docker
+      DOCKER_HOST: unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./emulador-data:/tmp/localstack
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  cdk-dev:
+    build: .
+    container_name: cdk-dev
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./app:/app
+    depends_on:
+      - emulador
+      - redis
+    environment:
+      AWS_ENDPOINT_URL: http://emulador:4566
+      REDIS_HOST: redis
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: us-east-1
+
+volumes:
+  redis_data:
